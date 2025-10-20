@@ -1,4 +1,5 @@
 # CLI
+![CI](https://github.com/mnink275/software-design-cli/actions/workflows/ci.yaml/badge.svg)
 
 ## Возможности
 - Команды cat, echo, pwd, wc, exit
