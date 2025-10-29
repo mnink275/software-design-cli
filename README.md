@@ -1,20 +1,31 @@
-# Simple C++ project template for Linux
+# CLI
+![CI](https://github.com/mnink275/software-design-cli/actions/workflows/ci.yaml/badge.svg)
 
-## Features:
-- C++ sources and headers directories building via CMake
-- Google Tests via FetchContent
-- fmt lib via Git Submodule
-- CI via Github Actions
-- clang-format for code formatting
-- Makefile with convenient commands
+## Возможности
+- Команды cat, echo, pwd, wc, exit
+- Запуска внешних команд
+- Синатксис с одинарными и двойными кавычками
+- Переменных окружения и подстановки
+- Пайплайн через "|"
 
-## Prereguisetes for use with VSCode:
-- [Clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) extention (used as static analysiser, code browsing, IntelliSense)
-- [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) extention (used as debugger). Note: the extention's IntelliSense should be disabled (check [settings.json](.vscode/settings.json))
+## Полезные команды
+- `make build-{debug/release}` - собрать дебажную или релизную версию
+- `make run-{debug/release}` - собрать и запустить дебажную или релизную версию
+- `make start-{debug/release}` - запустить дебажную или релизную версию
+- `make tests` - запустить тесты в дебажном режиме
+- `make clean` - очистить билд-директории
+- `make format` - отформатировать код
 
-## Usage:
-- Use `make build-(debug/release)` to produce (debug/release) build
-- Use `make run-(debug/release)` to build and instantly run a binary
-- Use `make tests` to run tests with debug build
-- Use `make clean` to clean build directories
-- Use `make format` to code formatting
+## Сборка и запуск
+```
+make build-release
+make start-release
+```
+
+## Команда разработки (Команда 1)
+- Вуколов Максим Вячеславович
+- Григорович Вячеслав Дмитриевич
+- Мингарипов Нияз Рустемович
+
+## Лицензия
+[MIT](/LICENCE.md)
