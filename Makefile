@@ -19,9 +19,14 @@ cmake-debug cmake-release: cmake-%: build_%/Makefile
 build-debug build-release: build-%: cmake-%
 	@cmake --build build_$* -j $(shell nproc)
 
-# Run
+# Build and run
 .PHONY: run-debug run-release
 run-debug run-release: run-%: build-%
+	@./build_$*/Greeter
+
+# Run without pre-building
+.PHONY: start-debug start-release
+start-debug start-release: start-%:
 	@./build_$*/Greeter
 
 # Run with `clean` step
