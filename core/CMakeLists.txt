@@ -17,6 +17,7 @@ set(SOURCES
     ${SRC_PATH}/cli.cpp
     ${SRC_PATH}/parser.cpp
     ${SRC_PATH}/executor.cpp
+    ${SRC_PATH}/pipe.cpp
 )
 
 add_library(
