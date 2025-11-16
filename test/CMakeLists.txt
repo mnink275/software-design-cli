@@ -5,7 +5,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_executable(
-    ${PROJECT_NAME}_test cli_test.cpp external_command_test.cpp pipe_test.cpp
+    ${PROJECT_NAME}_test cli_test.cpp external_command_test.cpp pipe_test.cpp parser_test.cpp std_io_test.cpp
 )
 
 target_include_directories(

@@ -14,10 +14,16 @@ class StdInput final : public Input {
     if (size == 0 || !std::cin.good()) {
       return {};
     }
-    std::vector<char> res(size);
-    std::cin.read(res.data(), static_cast<std::streamsize>(size));
-    auto count = std::cin.gcount();
-    res.resize(count);
+
+    std::vector<char> res;
+    res.reserve(size);
+
+    char c{};
+    while (res.size() < size && std::cin.get(c)) {
+      res.push_back(c);
+      if (c == '\n') break;
+    }
+
     return res;
   }
 };

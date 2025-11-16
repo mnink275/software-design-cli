@@ -1,14 +1,13 @@
 #include <cli.hpp>
-#include <dummy_output.hpp>
-#include <dummy_input.hpp>
+#include <std_output.hpp>
+#include <std_input.hpp>
 
-#include <string>
 #include <iostream>
 
 int main() {
   coreutils::Parser parser;
-  coreutils::DummyOutput output;
-  coreutils::DummyInput input;
+  coreutils::StdOutput output;
+  coreutils::StdInput input;
 
   coreutils::CLI cli{parser};
 
