@@ -8,7 +8,10 @@ namespace coreutils {
 
 class Parser final {
  public:
-  std::vector<std::string> parceToTokens(std::string&& raw_input);
+  std::vector<std::string> parseToTokens(std::string&& raw_input);
+
+ private:
+  std::string expandVariables(const std::string& str, bool expand);
 
  private:
   std::unordered_map<std::string, std::string> env_variables_;

@@ -27,6 +27,7 @@ TEST(ExternalCommand, ProcessInteraction) {
   pipeOut.reset();
   ASSERT_EQ(wc.run(*pipeIn, out), 0);
   ASSERT_EQ(out.read(), "     15      98    1039\n");
+  // ASSERT_EQ(out.read(), "      15     100    1039\n"); // На MacOS почему-то так
 }
 
 TEST(ExternalCommand, Error) {
