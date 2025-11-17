@@ -11,7 +11,7 @@ namespace coreutils {
 class StdInput final : public Input {
  public:
   std::vector<char> read(size_t size) override {
-    if (size == 0 || !std::cin.good()) {
+    if (size == 0) {
       return {};
     }
 

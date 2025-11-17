@@ -22,7 +22,7 @@ class CLI final {
   void runCli(Input& in, Output& out);
 
  private:
-  int process(std::string&& line, Output& out);
+  int process(std::string&& line, Output& out, Input& in);
   std::vector<CommandPtr> splitIntoCommands(std::vector<std::string>&& tokens);
 
   static CommandPtr createCommand(std::vector<std::string>&& tokens);

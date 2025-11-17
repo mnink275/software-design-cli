@@ -5,11 +5,15 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_executable(
-    ${PROJECT_NAME}_test cli_test.cpp external_command_test.cpp pipe_test.cpp parser_test.cpp std_io_test.cpp
+    ${PROJECT_NAME}_test cli_test.cpp command_test.cpp external_command_test.cpp pipe_test.cpp parser_test.cpp std_io_test.cpp
 )
 
 target_include_directories(
     ${PROJECT_NAME}_test PRIVATE ${PROJECT_SOURCE_DIR}
+)
+
+target_compile_definitions(
+    ${PROJECT_NAME}_test PRIVATE TEST_DATA_DIR="${PROJECT_SOURCE_DIR}/test/data"
 )
 
 target_link_libraries(

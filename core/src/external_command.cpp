@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include <array>
+#include <iostream>
 #include <stdexcept>
 #include <thread>
 #include <vector>
@@ -44,7 +45,8 @@ int ExternalCommand::run(Input& in, Output& out) {
     }
     argvs.push_back(nullptr);
     execvp(command_.data(), argvs.data());
-    __builtin_unreachable();
+    std::cerr << command_ << ": command not found\n";
+    _exit(127);
   } else {
     close(writePipe[0]);
     close(readPipe[1]);
@@ -65,7 +67,7 @@ int ExternalCommand::run(Input& in, Output& out) {
       std::array<char, DEFAULT_BLOCK_SIZE> buf{};
       while (true) {
         ssize_t size = read(rPipe, buf.data(), DEFAULT_BLOCK_SIZE);
-        if (size == 0) {
+        if (size <= 0) {
           break;
         }
         out.write({buf.data(), buf.data() + size});
@@ -75,7 +77,7 @@ int ExternalCommand::run(Input& in, Output& out) {
     writer.join();
     reader.join();
     int status = 0;
-    auto w = waitpid(pid, &status, WUNTRACED);
+    waitpid(pid, &status, 0);
     return WEXITSTATUS(status);
   }
 }
