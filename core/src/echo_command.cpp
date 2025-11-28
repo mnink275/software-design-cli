@@ -4,7 +4,7 @@
 
 namespace coreutils {
 
-int EchoCommand::run(Input&, Output& out) {
+int EchoCommand::run(Input& /*in*/, Output& out) {
   std::ostringstream oss;
 
   for (size_t i = 0; i < args_.size(); ++i) {
@@ -16,7 +16,7 @@ int EchoCommand::run(Input&, Output& out) {
 
   oss << '\n';
   auto str = oss.str();
-  out.write({str.begin(), str.end()});
+  out.write(str);
   return 0;
 }
 

@@ -2,7 +2,6 @@
 #include <pipe.hpp>
 
 #include <array>
-#include <vector>
 
 #include <unistd.h>
 
@@ -20,15 +19,7 @@ class PipeInput : public Input {
   PipeInput& operator=(const PipeInput&) noexcept = delete;
   PipeInput& operator=(PipeInput&&) noexcept = default;
 
-  std::vector<char> read(size_t size) override {
-    std::vector<char> buf(size);
-    ssize_t count = ::read(fd_, buf.data(), size);
-    if (count == 0) {
-      return {};
-    }
-    buf.resize(count);
-    return buf;
-  }
+  [[nodiscard]] int fd() const override { return fd_; }
 
  private:
   int fd_;
@@ -44,9 +35,7 @@ class PipeOutput : public Output {
   PipeOutput& operator=(const PipeOutput&) noexcept = delete;
   PipeOutput& operator=(PipeOutput&&) noexcept = default;
 
-  void write(std::vector<char> data) override {
-    ::write(fd_, data.data(), data.size());
-  }
+  [[nodiscard]] int fd() const override { return fd_; }
 
  private:
   int fd_;

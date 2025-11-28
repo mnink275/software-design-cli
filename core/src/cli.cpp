@@ -7,7 +7,6 @@
 
 #include <cat_command.hpp>
 #include <command.hpp>
-#include <dummy_input.hpp>
 #include <echo_command.hpp>
 #include <exit_command.hpp>
 #include <external_command.hpp>
@@ -26,7 +25,7 @@ void CLI::runCli(Input& in, Output& out) {
     std::cout << "-> ";
     std::cout.flush();
 
-    auto data = in.read(kBatchSize);
+    auto data = in.readVector(kBatchSize);
     if (data.empty()) {
       break;
     }
@@ -56,11 +55,9 @@ int CLI::process(std::string&& line, Output& out, Input& in) {
   if (!commands.empty()) {
     needs_stdin = false;
   }
-  DummyInput dummy_input;
-  Input& cmd_input = dummy_input;
 
   try {
-    return executor_.runCommands(std::move(commands), cmd_input, out);
+    return executor_.runCommands(std::move(commands), in, out);
   } catch (const std::exception& ex) {
     std::cerr << ex.what() << '\n';
     return 1;

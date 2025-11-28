@@ -1,30 +1,34 @@
 #pragma once
 
 #include <input.hpp>
+#include <pipe.hpp>
 
-#include <cstddef>
-#include <string>
-#include <vector>
+#include <optional>
+#include <thread>
 
 namespace coreutils {
 
 class TextInput final : public Input {
  public:
-  explicit TextInput(std::string str) : str_(std::move(str)) {}
-  std::vector<char> read(size_t size) override {
-    if (offset_ == str_.size()) {
-      return {};
-    }
-
-    size = std::min(size, str_.size() - offset_);
-    std::vector<char> res{&str_[offset_], &str_[offset_ + size]};
-    offset_ += size;
-    return res;
+  explicit TextInput(std::string str) {
+    auto [in, out] = createPipe();
+    in_ = std::move(in);    // NOLINT
+    thread_.emplace([str = std::move(str), out = std::move(out)]() { out->write(str); });
   }
+  ~TextInput() override {
+    in_.reset();
+    thread_->join();
+  }
+  TextInput(const TextInput&) noexcept = delete;
+  TextInput(TextInput&&) noexcept = delete;
+  TextInput& operator=(const TextInput&) noexcept = delete;
+  TextInput& operator=(TextInput&&) noexcept = delete;
+
+  [[nodiscard]] int fd() const override { return in_->fd(); }
 
  private:
-  std::string str_;
-  size_t offset_{};
+  std::unique_ptr<Input> in_{};
+  std::optional<std::thread> thread_;
 };
 
 }  // namespace coreutils

@@ -2,30 +2,13 @@
 
 #include <input.hpp>
 
-#include <cstddef>
-#include <iostream>
-#include <vector>
+#include <unistd.h>
 
 namespace coreutils {
 
 class StdInput final : public Input {
  public:
-  std::vector<char> read(size_t size) override {
-    if (size == 0) {
-      return {};
-    }
-
-    std::vector<char> res;
-    res.reserve(size);
-
-    char c{};
-    while (res.size() < size && std::cin.get(c)) {
-      res.push_back(c);
-      if (c == '\n') break;
-    }
-
-    return res;
-  }
+  [[nodiscard]] int fd() const override { return STDIN_FILENO; }
 };
 
 }  // namespace coreutils

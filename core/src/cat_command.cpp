@@ -14,10 +14,10 @@ constexpr size_t kBufferSize = 4096;
 
 int CatCommand::run(Input& in, Output& out) {
   if (files_.empty()) {
-    auto buf = in.read(kBufferSize);
+    auto buf = in.readVector(kBufferSize);
     while (!buf.empty()) {
-      out.write(std::move(buf));
-      buf = in.read(kBufferSize);
+      out.write(buf);
+      buf = in.readVector(kBufferSize);
     }
     return 0;
   }
@@ -38,8 +38,7 @@ int CatCommand::run(Input& in, Output& out) {
       if (read_count <= 0) {
         break;
       }
-      out.write(
-          {buffer.data(), buffer.data() + static_cast<size_t>(read_count)});
+      out.write(buffer.data(), read_count);
     }
   }
 

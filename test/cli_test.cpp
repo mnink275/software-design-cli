@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <thread>
-
 #include <cli.hpp>
 #include <global_state.hpp>
 #include <parser.hpp>

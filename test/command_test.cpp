@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <cat_command.hpp>
-#include <dummy_input.hpp>
 #include <echo_command.hpp>
 #include <exit_command.hpp>
 #include <global_state.hpp>
@@ -33,9 +32,8 @@ std::string ReadFile(const std::filesystem::path& path) {
 
 TEST(CommandTest, EchoPrintsArguments) {
   EchoCommand command({"hello", "world"});
-  DummyInput input;
+  TextInput input("");
   TextOutput output;
-
   ASSERT_EQ(command.run(input, output), 0);
   EXPECT_EQ(output.read(), "hello world\n");
 }
@@ -43,7 +41,7 @@ TEST(CommandTest, EchoPrintsArguments) {
 TEST(CommandTest, CatPrintsFileContent) {
   const auto file = std::filesystem::path(TEST_DATA_DIR) / "file.txt";
   CatCommand command({file.string()});
-  DummyInput input;
+  TextInput input("");
   TextOutput output;
 
   ASSERT_EQ(command.run(input, output), 0);
@@ -57,7 +55,6 @@ TEST(CommandTest, CatReadInput) {
 
   TextInput input(file);
   TextOutput output;
-
   ASSERT_EQ(command.run(input, output), 0);
   EXPECT_EQ(output.read(), file);
 }
@@ -65,7 +62,7 @@ TEST(CommandTest, CatReadInput) {
 TEST(CommandTest, WcReturnsFileStats) {
   const auto file = std::filesystem::path(TEST_DATA_DIR) / "file.txt";
   WcCommand command({file.string()});
-  DummyInput input;
+  TextInput input("");
   TextOutput output;
 
   ASSERT_EQ(command.run(input, output), 0);
@@ -86,7 +83,7 @@ TEST(CommandTest, WcReadInput) {
 
 TEST(CommandTest, PwdPrintsCurrentWorkingDirectory) {
   PwdCommand command;
-  DummyInput input;
+  TextInput input("");
   TextOutput output;
 
   ASSERT_EQ(command.run(input, output), 0);
@@ -98,7 +95,7 @@ TEST(CommandTest, PwdPrintsCurrentWorkingDirectory) {
 TEST(CommandTest, ExitCommandSetsExitFlag) {
   IsExit = false;
   ExitCommand command;
-  DummyInput input;
+  TextInput input("");
   TextOutput output;
 
   ASSERT_EQ(command.run(input, output), 0);

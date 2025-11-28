@@ -2,16 +2,13 @@
 
 #include <output.hpp>
 
-#include <iostream>
-#include <vector>
+#include <unistd.h>
 
 namespace coreutils {
 
 class StdOutput : public Output {
  public:
-  void write(std::vector<char> data) override {
-    std::cout.write(data.data(), static_cast<std::streamsize>(data.size()));
-  }
+  [[nodiscard]] int fd() const override { return STDOUT_FILENO; }
 };
 
 }  // namespace coreutils

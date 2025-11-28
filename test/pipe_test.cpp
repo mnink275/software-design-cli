@@ -8,12 +8,12 @@ namespace coreutils::test {
 
 TEST(Pipe, Basic) {
   auto [in, out] = createPipe();
-  out->write({'a'});
-  out->write({'b', 'c'});
+  out->write(std::vector{'a'});
+  out->write(std::vector{'b', 'c'});
   std::vector<char> expected = {'a', 'b', 'c'};
-  EXPECT_EQ(in->read(DEFAULT_BLOCK_SIZE), expected);
+  EXPECT_EQ(in->readVector(DEFAULT_BLOCK_SIZE), expected);
   out.reset();
-  EXPECT_EQ(in->read(DEFAULT_BLOCK_SIZE), std::vector<char>());
+  EXPECT_EQ(in->readVector(DEFAULT_BLOCK_SIZE), std::vector<char>());
 }
 
 }  // namespace coreutils::test

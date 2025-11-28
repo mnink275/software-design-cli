@@ -9,8 +9,6 @@ set(HEADERS
     ${INCLUDE_PATH}/exit_command.hpp
     ${INCLUDE_PATH}/executor.hpp
     ${INCLUDE_PATH}/input.hpp
-    ${INCLUDE_PATH}/dummy_input.hpp
-    ${INCLUDE_PATH}/dummy_output.hpp
     ${INCLUDE_PATH}/output.hpp
     ${INCLUDE_PATH}/pwd_command.hpp
     ${INCLUDE_PATH}/parser.hpp
@@ -28,6 +26,8 @@ set(SOURCES
     ${SRC_PATH}/pwd_command.cpp
     ${SRC_PATH}/wc_command.cpp
     ${SRC_PATH}/pipe.cpp
+    ${SRC_PATH}/input.cpp
+    ${SRC_PATH}/output.cpp
 )
 
 add_library(

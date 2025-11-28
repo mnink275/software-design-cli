@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 namespace coreutils {
@@ -13,7 +14,12 @@ class Output {
   Output& operator=(const Output&) noexcept = delete;
   Output& operator=(Output&&) noexcept = default;
 
-  virtual void write(std::vector<char> data) = 0;
+  void write(const char* data, size_t size) const;
+  void write(const std::vector<char>& data) const;
+  void write(const std::string& data) const;
+  void setStdout() const;
+
+  [[nodiscard]] virtual int fd() const = 0;
 };
 
 }  // namespace coreutils

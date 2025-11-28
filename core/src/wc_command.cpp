@@ -24,9 +24,7 @@ struct FileStats {
   std::vector<char> buffer = reader(kBufferSize);
   while (!buffer.empty()) {
     stats.bytes += static_cast<size_t>(buffer.size());
-    for (std::streamsize i = 0; i < buffer.size(); ++i) {
-      const auto ch =
-          static_cast<unsigned char>(buffer[static_cast<size_t>(i)]);
+    for (char ch : buffer) {
       if (ch == '\n') {
         ++stats.lines;
       }
@@ -61,10 +59,10 @@ std::string toString(const FileStats& stats) {
 int WcCommand::run(Input& in, Output& out) {
   if (files_.empty()) {
     FileStats stats =
-        collectStats([&in](size_t size) { return in.read(size); });
+        collectStats([&in](size_t size) { return in.readVector(size); });
 
     auto result = toString(stats) + "\n";
-    out.write({result.begin(), result.end()});
+    out.write(result);
     return 0;
   }
 
@@ -83,7 +81,7 @@ int WcCommand::run(Input& in, Output& out) {
             return buf;
           });
       auto line = toString(stats) + " " + file + "\n";
-      out.write({line.begin(), line.end()});
+      out.write(line);
     } catch (const std::runtime_error&) {
       std::cerr << "Unable to open file: " << file << '\n';
       exit_code = 1;
