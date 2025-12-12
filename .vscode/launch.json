@@ -5,10 +5,10 @@
       "name": "Launch (gdb)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build_debug/Greeter",
+      "program": "${workspaceFolder}/build_debug/CLI",
       "args": [],
       "stopAtEntry": false,
-      "MIMode": "gdb",
+      "MIMode": "lldb",
       "linux": {
         "MIMode": "gdb",
         "miDebuggerPath": "/usr/bin/gdb",

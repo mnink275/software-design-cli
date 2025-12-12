@@ -22,12 +22,12 @@ build-debug build-release: build-%: cmake-%
 # Build and run
 .PHONY: run-debug run-release
 run-debug run-release: run-%: build-%
-	@./build_$*/Greeter
+	@./build_$*/CLI
 
 # Run without pre-building
 .PHONY: start-debug start-release
 start-debug start-release: start-%:
-	@./build_$*/Greeter
+	@./build_$*/CLI
 
 # Run with `clean` step
 .PHONY: clean-run-debug clean-run-release
@@ -49,3 +49,8 @@ format:
 .PHONY: tests
 tests: build-debug
 	@cd build_debug && ctest -V
+
+# Run tests in debug
+.PHONY: tests-failed
+tests-failed: build-debug
+	@cd build_debug && ctest -V --rerun-failed --output-on-failure

@@ -1,9 +1,20 @@
-#include <greeter.hpp>
+#include <cli.hpp>
+#include <std_output.hpp>
+#include <std_input.hpp>
 
-#include <fmt/core.h>
+#include <iostream>
 
 int main() {
-  ink::Greeter greeter;
-  auto greeting = greeter.MakeGreetingFor("World");
-  fmt::print("Greeting: {}\n", greeting);
+  coreutils::Parser parser;
+  coreutils::StdOutput output;
+  coreutils::StdInput input;
+
+  coreutils::CLI cli{parser};
+
+  try {
+    cli.runCli(input, output);
+  } catch (const std::exception& ex) {
+    std::cerr << ex.what() << '\n';
+    return -1;
+  }
 }
