@@ -95,11 +95,11 @@ CLI::CommandPtr CLI::createCommand(std::vector<std::string>&& tokens) {
     return std::make_unique<WcCommand>(std::move(rest));
   }
 
-  if (cmd_name == "lsm") {
+  if (cmd_name == "ls") {
     return std::make_unique<LsCommand>(std::move(rest));
   }
 
-  if (cmd_name == "cdm") {
+  if (cmd_name == "cd") {
     return std::make_unique<CdCommand>(std::move(rest));
   }
 
