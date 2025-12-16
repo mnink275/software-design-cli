@@ -21,4 +21,3 @@ int EchoCommand::run(Input& /*in*/, Output& out) {
 }
 
 }  // namespace coreutils
-

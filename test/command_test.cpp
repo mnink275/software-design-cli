@@ -66,7 +66,7 @@ TEST(CommandTest, WcReturnsFileStats) {
   TextOutput output;
 
   ASSERT_EQ(command.run(input, output), 0);
-  EXPECT_EQ(output.read(), "15 98 1039 " + file.string() + "\n");
+  EXPECT_EQ(output.read(), "      15      98    1039 " + file.string() + "\n");
 }
 
 TEST(CommandTest, WcReadInput) {
@@ -78,7 +78,7 @@ TEST(CommandTest, WcReadInput) {
   TextOutput output;
 
   ASSERT_EQ(command.run(input, output), 0);
-  EXPECT_EQ(output.read(), "15 98 1039\n");
+  EXPECT_EQ(output.read(), "      15      98    1039\n");
 }
 
 TEST(CommandTest, PwdPrintsCurrentWorkingDirectory) {
@@ -104,4 +104,3 @@ TEST(CommandTest, ExitCommandSetsExitFlag) {
 }
 
 }  // namespace coreutils::test
-

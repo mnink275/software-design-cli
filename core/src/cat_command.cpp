@@ -46,4 +46,3 @@ int CatCommand::run(Input& in, Output& out) {
 }
 
 }  // namespace coreutils
-

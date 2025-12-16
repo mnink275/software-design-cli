@@ -137,8 +137,6 @@ std::vector<std::string> Parser::parseToTokens(std::string&& raw_input) {
     if (in_single_quote) {
       if (ch == '\'') {
         in_single_quote = false;
-      } else if (ch == '$') {
-        handleDollarSign(raw_input, pos, current_token);
       } else {
         current_token += ch;
       }

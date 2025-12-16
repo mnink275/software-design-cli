@@ -1,9 +1,9 @@
 #include <cli.hpp>
 
+#include <unistd.h>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <unistd.h>
 
 #include <cat_command.hpp>
 #include <command.hpp>
@@ -51,11 +51,6 @@ int CLI::process(std::string&& line, Output& out, Input& in) {
 
   auto commands = splitIntoCommands(std::move(tokens));
 
-  bool needs_stdin = false;
-  if (!commands.empty()) {
-    needs_stdin = false;
-  }
-
   try {
     return executor_.runCommands(std::move(commands), in, out);
   } catch (const std::exception& ex) {
@@ -66,10 +61,19 @@ int CLI::process(std::string&& line, Output& out, Input& in) {
 
 std::vector<CLI::CommandPtr> CLI::splitIntoCommands(
     std::vector<std::string>&& tokens) {
-  auto cmd = createCommand(std::move(tokens));
-
   std::vector<CLI::CommandPtr> result;
-  result.push_back(std::move(cmd));
+
+  auto it = tokens.begin();
+  while (it != tokens.end()) {
+    auto sep = std::find(it, tokens.end(), "|");
+    std::vector<std::string> part;
+    std::move(it, sep, std::back_inserter(part));
+
+    if (!part.empty()) result.push_back(createCommand(std::move(part)));
+
+    it = (sep == tokens.end()) ? sep : std::next(sep);
+  }
+
   return result;
 }
 
