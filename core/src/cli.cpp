@@ -1,6 +1,7 @@
 #include <cli.hpp>
 
 #include <unistd.h>
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
