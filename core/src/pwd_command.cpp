@@ -13,4 +13,3 @@ int PwdCommand::run(Input& /*in*/, Output& out) {
 }
 
 }  // namespace coreutils
-

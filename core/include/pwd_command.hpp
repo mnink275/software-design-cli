@@ -10,4 +10,3 @@ class PwdCommand final : public Command {
 };
 
 }  // namespace coreutils
-

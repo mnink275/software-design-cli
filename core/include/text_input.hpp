@@ -12,8 +12,9 @@ class TextInput final : public Input {
  public:
   explicit TextInput(std::string str) {
     auto [in, out] = createPipe();
-    in_ = std::move(in);    // NOLINT
-    thread_.emplace([str = std::move(str), out = std::move(out)]() { out->write(str); });
+    in_ = std::move(in);  // NOLINT
+    thread_.emplace(
+        [str = std::move(str), out = std::move(out)]() { out->write(str); });
   }
   ~TextInput() override {
     in_.reset();

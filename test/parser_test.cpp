@@ -134,14 +134,14 @@ TEST_F(ParserTest, VariableInDoubleQuotes) {
   EXPECT_EQ(tokens[1], "test value end");
 }
 
-// Будем игнорировать раскрытие в части 2
+// В одинарных кавычках переменные не раскрываются
 TEST_F(ParserTest, VariableInSingleQuotes) {
   Parser parser;
   auto tokens = parser.parseToTokens("echo '$VAR'");
 
   ASSERT_EQ(tokens.size(), 2);
   EXPECT_EQ(tokens[0], "echo");
-  EXPECT_EQ(tokens[1], "value");
+  EXPECT_EQ(tokens[1], "$VAR");
 }
 
 TEST_F(ParserTest, ComplexCommand) {
@@ -199,12 +199,30 @@ TEST_F(ParserTest, ParseVariables) {
 
 TEST_F(ParserTest, SetVariablesBeforeCommand) {
   Parser parser;
-  auto tokens = parser.parseToTokens("a=123 sh -c 'echo ${a}'");
+  auto tokens = parser.parseToTokens("a=123 sh -c \"echo ${a}\"");
 
   ASSERT_EQ(tokens.size(), 3);
   EXPECT_EQ(tokens[0], "sh");
   EXPECT_EQ(tokens[1], "-c");
   EXPECT_EQ(tokens[2], "echo 123");
+}
+
+TEST_F(ParserTest, SingleQuotesPreventVariableExpansion) {
+  Parser parser;
+  auto tokens = parser.parseToTokens(R"(echo '"$VAR"')");
+
+  ASSERT_EQ(tokens.size(), 2);
+  EXPECT_EQ(tokens[0], "echo");
+  EXPECT_EQ(tokens[1], R"("$VAR")");
+}
+
+TEST_F(ParserTest, NestedQuotesWithVariable) {
+  Parser parser;
+  auto tokens = parser.parseToTokens("y=x echo '\"$y\"'");
+
+  ASSERT_EQ(tokens.size(), 2);
+  EXPECT_EQ(tokens[0], "echo");
+  EXPECT_EQ(tokens[1], "\"$y\"");
 }
 
 }  // namespace coreutils::test
