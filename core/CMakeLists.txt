@@ -13,6 +13,8 @@ set(HEADERS
     ${INCLUDE_PATH}/pwd_command.hpp
     ${INCLUDE_PATH}/parser.hpp
     ${INCLUDE_PATH}/wc_command.hpp
+    ${INCLUDE_PATH}/ls_command.hpp
+    ${INCLUDE_PATH}/cd_command.hpp
     ${INCLUDE_PATH}/global_state.hpp
 )
 
@@ -28,6 +30,8 @@ set(SOURCES
     ${SRC_PATH}/pipe.cpp
     ${SRC_PATH}/input.cpp
     ${SRC_PATH}/output.cpp
+    ${SRC_PATH}/ls_command.cpp
+    ${SRC_PATH}/cd_command.cpp
 )
 
 add_library(

@@ -2,7 +2,7 @@
 ![CI](https://github.com/mnink275/software-design-cli/actions/workflows/ci.yaml/badge.svg)
 
 ## Возможности
-- Команды cat, echo, pwd, wc, exit
+- Команды cat, echo, pwd, wc, exit, ls, cd
 - Запуска внешних команд
 - Синатксис с одинарными и двойными кавычками
 - Переменных окружения и подстановки

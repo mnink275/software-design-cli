@@ -14,6 +14,8 @@
 #include <global_state.hpp>
 #include <pwd_command.hpp>
 #include <wc_command.hpp>
+#include <ls_command.hpp>
+#include <cd_command.hpp>
 
 namespace coreutils {
 
@@ -109,6 +111,17 @@ CLI::CommandPtr CLI::createCommand(std::vector<std::string>&& tokens) {
     // Exit command ignores arguments
     return std::make_unique<ExitCommand>();
   }
+
+  if (cmd_name == "ls") {
+    // Exit command ignores arguments
+    return std::make_unique<LsCommand>(std::move(rest));
+  }
+
+  if (cmd_name == "cd") {
+    // Exit command ignores arguments
+    return std::make_unique<CdCommand>(std::move(rest));
+  }
+
 
   return std::make_unique<ExternalCommand>(std::move(cmd_name),
                                            std::move(rest));
