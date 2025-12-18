@@ -28,7 +28,7 @@ std::vector<char> Input::readVector() const {
     std::array<char, DEFAULT_BLOCK_SIZE> buf{};
     auto size = read(buf.data(), DEFAULT_BLOCK_SIZE);
     if (size == 0) {
-        return res;
+      return res;
     }
     res.insert(res.end(), buf.begin(), buf.begin() + size);
   }
@@ -46,14 +46,12 @@ std::string Input::readString() const {
     std::array<char, DEFAULT_BLOCK_SIZE> buf{};
     auto size = read(buf.data(), DEFAULT_BLOCK_SIZE);
     if (size == 0) {
-        return res;
+      return res;
     }
     res.insert(res.end(), buf.begin(), buf.begin() + size);
   }
 }
 
-void Input::setStdin() const {
-  dup2(fd(), STDIN_FILENO);
-}
+void Input::setStdin() const { dup2(fd(), STDIN_FILENO); }
 
 }  // namespace coreutils

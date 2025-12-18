@@ -19,4 +19,3 @@ class EchoCommand final : public Command {
 };
 
 }  // namespace coreutils
-

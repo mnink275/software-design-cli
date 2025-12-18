@@ -51,7 +51,7 @@ TEST_F(CLITest, RunCliSingleCommand) {
 
 TEST_F(CLITest, RunCliEnvVariables) {
   TextOutput output;
-  TextInput input("a=123 sh -c 'echo ${a}'");
+  TextInput input("a=123 echo ${a}");
   EXPECT_NO_THROW(cli->runCli(input, output));
   EXPECT_EQ(output.read(), "123\n");
 }

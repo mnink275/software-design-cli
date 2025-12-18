@@ -19,4 +19,3 @@ class CatCommand final : public Command {
 };
 
 }  // namespace coreutils
-
