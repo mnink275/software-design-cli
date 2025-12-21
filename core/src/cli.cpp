@@ -14,6 +14,7 @@
 #include <external_command.hpp>
 #include <global_state.hpp>
 #include <ls_command.hpp>
+#include <grep_command.hpp>
 #include <pwd_command.hpp>
 #include <wc_command.hpp>
 
@@ -118,6 +119,10 @@ CLI::CommandPtr CLI::createCommand(std::vector<std::string>&& tokens) {
   if (cmd_name == "exit") {
     // Exit command ignores arguments
     return std::make_unique<ExitCommand>();
+  }
+
+  if (cmd_name == "grep") {
+    return std::make_unique<GrepCommand>(std::move(rest));
   }
 
   return std::make_unique<ExternalCommand>(std::move(cmd_name),

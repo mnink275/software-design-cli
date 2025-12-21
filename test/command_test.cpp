@@ -6,6 +6,7 @@
 #include <exit_command.hpp>
 #include <global_state.hpp>
 #include <ls_command.hpp>
+#include <grep_command.hpp>
 #include <pwd_command.hpp>
 #include <text_input.hpp>
 #include <text_output.hpp>
@@ -231,5 +232,197 @@ TEST(CommandTest, LsPrintsFileNameWhenArgumentIsFile) {
   ASSERT_EQ(command.run(input, output), 0);
   EXPECT_EQ(output.read(), file.string() + "\n");
 }
+
+TEST(GrepTest, BasicPatternMatch) {
+  GrepCommand command({"hello", std::filesystem::path(TEST_DATA_DIR) / "file.txt"});
+  TextInput input("");
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  EXPECT_EQ(output.read(), "");
+}
+
+TEST(GrepTest, MatchesLinesWithPattern) {
+  GrepCommand command({"Штирлиц", std::filesystem::path(TEST_DATA_DIR) / "file.txt"});
+  TextInput input("");
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_TRUE(result.find("Штирлиц") != std::string::npos);
+}
+
+TEST(GrepTest, CaseInsensitiveSearch) {
+  std::string test_input = "Hello World\nhello world\nHELLO WORLD\nfoo bar\n";
+  GrepCommand command({"-i", "hello"});
+  TextInput input(test_input);
+  TextOutput output;
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_TRUE(result.find("Hello World") != std::string::npos);
+  EXPECT_TRUE(result.find("hello world") != std::string::npos);
+  EXPECT_TRUE(result.find("HELLO WORLD") != std::string::npos);
+  EXPECT_TRUE(result.find("foo bar") == std::string::npos);
+}
+
+TEST(GrepTest, WholeWordSearch) {
+  std::string test_input = "test testing tester\ntest only\ncontest\n";
+  GrepCommand command({"-w", "test"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_TRUE(result.find("test testing tester") != std::string::npos);
+  EXPECT_TRUE(result.find("test only") != std::string::npos);
+}
+
+TEST(GrepTest, WholeWordSearchStrict) {
+  std::string test_input = "contest\nprotester\n";
+  GrepCommand command({"-w", "test"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_EQ(result, "");
+}
+
+TEST(GrepTest, AfterContextZero) {
+  std::string test_input = "line1\nmatch\nline3\nline4\n";
+  GrepCommand command({"-A", "0", "match"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_EQ(result, "match\n");
+}
+
+TEST(GrepTest, AfterContextOne) {
+  std::string test_input = "line1\nmatch\nline3\nline4\n";
+  GrepCommand command({"-A", "1", "match"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_EQ(result, "match\nline3\n");
+}
+
+TEST(GrepTest, AfterContextTwo) {
+  std::string test_input = "line1\nmatch\nline3\nline4\nline5\n";
+  GrepCommand command({"-A", "2", "match"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_EQ(result, "match\nline3\nline4\n");
+}
+
+TEST(GrepTest, OverlappingContextAreas) {
+  std::string test_input = "line1\nmatch1\nline3\nmatch2\nline5\nline6\n";
+  GrepCommand command({"-A", "2", "match"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_TRUE(result.find("match1") != std::string::npos);
+  EXPECT_TRUE(result.find("match2") != std::string::npos);
+  EXPECT_TRUE(result.find("line3") != std::string::npos);
+  EXPECT_TRUE(result.find("line5") != std::string::npos);
+  EXPECT_TRUE(result.find("line6") != std::string::npos);
+}
+
+TEST(GrepTest, RegexAnchorEnd) {
+  std::string test_input = "hello world\nworld hello\nhello\n";
+  GrepCommand command({"world$"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_EQ(result, "hello world\n");
+}
+
+TEST(GrepTest, RegexAnchorStart) {
+  std::string test_input = "hello world\nworld hello\nhello\n";
+  GrepCommand command({"^hello"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_TRUE(result.find("hello world") != std::string::npos);
+  EXPECT_TRUE(result.find("hello\n") != std::string::npos);
+  EXPECT_TRUE(result.find("world hello") == std::string::npos);
+}
+
+TEST(GrepTest, RegexDotStar) {
+  std::string test_input = "abc123def\nfoo\n123\n";
+  GrepCommand command({"abc.*def"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_EQ(result, "abc123def\n");
+}
+
+TEST(GrepTest, ReadFromStdin) {
+  std::string test_input = "first line\nsecond line\nthird line\n";
+  GrepCommand command({"second"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  EXPECT_EQ(output.read(), "second line\n");
+}
+
+TEST(GrepTest, FileNotFound) {
+  GrepCommand command({"pattern", "/nonexistent/file.txt"});
+  TextInput input("");
+  TextOutput output;
+  int result = command.run(input, output);
+  EXPECT_NE(result, 0);
+}
+
+TEST(GrepTest, CombinedFlags) {
+  std::string test_input = "TEST word\ntest WORD\nTesting\n";
+  GrepCommand command({"-i", "-w", "test"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_TRUE(result.find("TEST word") != std::string::npos);
+  EXPECT_TRUE(result.find("test WORD") != std::string::npos);
+  EXPECT_TRUE(result.find("Testing") == std::string::npos);
+}
+
+TEST(GrepTest, NoMatchReturnsEmpty) {
+  std::string test_input = "foo bar baz\n";
+  GrepCommand command({"xyz"});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  EXPECT_EQ(output.read(), "");
+}
+
+TEST(GrepTest, EmptyPatternMatchesAll) {
+  std::string test_input = "line1\nline2\n";
+  GrepCommand command({""});
+  TextInput input(test_input);
+  TextOutput output;
+
+  ASSERT_EQ(command.run(input, output), 0);
+  std::string result = output.read();
+  EXPECT_TRUE(result.find("line1") != std::string::npos);
+  EXPECT_TRUE(result.find("line2") != std::string::npos);
+}
+
 
 }  // namespace coreutils::test

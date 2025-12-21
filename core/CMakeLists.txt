@@ -9,6 +9,7 @@ set(HEADERS
     ${INCLUDE_PATH}/echo_command.hpp
     ${INCLUDE_PATH}/exit_command.hpp
     ${INCLUDE_PATH}/executor.hpp
+    ${INCLUDE_PATH}/grep_command.hpp
     ${INCLUDE_PATH}/input.hpp
     ${INCLUDE_PATH}/ls_command.hpp
     ${INCLUDE_PATH}/output.hpp
@@ -23,6 +24,7 @@ set(SOURCES
     ${SRC_PATH}/cat_command.cpp
     ${SRC_PATH}/cd_command.cpp
     ${SRC_PATH}/echo_command.cpp
+    ${SRC_PATH}/grep_command.cpp
     ${SRC_PATH}/parser.cpp
     ${SRC_PATH}/executor.cpp
     ${SRC_PATH}/external_command.cpp
@@ -38,7 +40,9 @@ add_library(
     ${PROJECT_NAME}_objs OBJECT ${SOURCES} ${HEADERS}
 )
 target_include_directories(
-    ${PROJECT_NAME}_objs PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include
+    ${PROJECT_NAME}_objs PUBLIC 
+    ${CMAKE_CURRENT_LIST_DIR}/include
+    ${CMAKE_SOURCE_DIR}/third_party/CLI11
 )
 target_link_libraries(
     ${PROJECT_NAME}_objs fmt
