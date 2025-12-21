@@ -7,11 +7,13 @@
 #include <stdexcept>
 
 #include <cat_command.hpp>
+#include <cd_command.hpp>
 #include <command.hpp>
 #include <echo_command.hpp>
 #include <exit_command.hpp>
 #include <external_command.hpp>
 #include <global_state.hpp>
+#include <ls_command.hpp>
 #include <pwd_command.hpp>
 #include <wc_command.hpp>
 
@@ -96,6 +98,14 @@ CLI::CommandPtr CLI::createCommand(std::vector<std::string>&& tokens) {
   if (cmd_name == "wc") {
     // Wc reads from stdin
     return std::make_unique<WcCommand>(std::move(rest));
+  }
+
+  if (cmd_name == "ls") {
+    return std::make_unique<LsCommand>(std::move(rest));
+  }
+
+  if (cmd_name == "cd") {
+    return std::make_unique<CdCommand>(std::move(rest));
   }
 
   if (cmd_name == "pwd") {
